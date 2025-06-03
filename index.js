@@ -1,46 +1,56 @@
 import express from "express";
-import mongoose from "mongoose";
+import mongoose from "mongoose";  
+import userModel from"./models/userModel.js";
+import productModel from"./models/productModel.js";
 import cors from "cors";
+
 const app = express();
-app.listen(8080,()=>{
-    mongoose.connect("mongodb://localhost:27017/gcet");
-    console.log("server started in port 8080");
+app.use(cors());
+app.use(express.json());
+app.listen(8080, () => {
+  mongoose
+    .connect("mongodb://localhost:27017/gcet");
+  console.log("connected");
+
 });
-const userSchema=mongoose.Schema({
-  name :{type :String},
-});
-const user=mongoose.model("User",userSchema);
-app.get("register", async (req, res) => {
-  const result = await user.insertOne({name: "John"});
+
+
+
+app.get("/", async(req, res) => res.send("good morning"));
+
+app.post("/register", async (req, res) => {
+
+  const {name,email,password} = req.body;
+
+  const result=await userModel.insertOne({name:name,email:email,password:password});
+  
   return res.json(result);
 });
-app.listen(8080, () => {
-  console.log("Server Started");
-});
-app.use(cors());
-app.get("/", (req, res) => {
-  return res.send("Good Morning");
+
+app.post("/login", async (req, res) => {
+  const {name,email,password} = req.body;
+
+  const result = await userModel.findOne({ name:name,email: email, password: password });
+  if (result) {
+    return res.json({  status:"accepted",result });
+  } else {
+    return res.json({ status: "error", error: "Invalid credentials" });
+  }
 });
 
-
-app.get("/greet", (req, res) => {
-  res.send("Greetings");
+app.post("/products", async (req, res) => {
+  const products=await productModel.find();
+  return res.json(products); 
 });
 
-app.get("/name", (req, res) => {
-  res.send("SANJAY");
-});
+app.get("/greet", (req, res) => res.send("Hello World"));
 
-app.get("/weather", (req, res) => {
-  res.send("37degree");
-});
+app.get("/weather", (req, res) => res.send("31degrees"));
 
-app.get("/products", (req, res) => {
-  const products = [
-    { name: "Laptop", price: 34000 },
-    { name: "KeyBoard", price: 1200 },
-    { name: "Mouse", price: 900 },
-    
-  ];
-  res.json(products);
-});
+/*app.get("/product", (req, res) => {
+  res.json([
+    { id: 1, name: "Laptop", price: 50000 },
+    { id: 2, name: "Smartphone", price: 20000 },
+    { id: 3, name: "Headphones", price: 3000 }
+  ]);
+});*/
