@@ -29,10 +29,10 @@ userRouter.post("/register", async (req, res) => {
 
 // Login Route
 userRouter.post("/login", async (req, res) => {
-  const { email, pass } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await userModel.findOne({ email, password: pass });
+    const user = await userModel.findOne({ email, password: password });
     if (!user) {
       return res.json({ message: "Invalid user or password" });
     }
