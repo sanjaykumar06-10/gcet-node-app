@@ -6,29 +6,23 @@ dotenv.config();
 
 import userRouter from "./routes/userRoutes.js";
 import productRouter from "./routes/productRoutes.js";
-import ordersRouter from "./routes/ordersRoutes.js"
+import ordersRouter from "./routes/ordersRoutes.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const MONGO_URI = process.env.MONGO_URI
+const MONGO_URI = process.env.MONGO_URI;
 
+// Routes
 app.use("/users", userRouter);
 app.use("/products", productRouter);
 app.use("/orders", ordersRouter);
 
-/*app.listen(8080, () => {
-  mongoose.connect(`${MONGODB_URI}`);
-  console.log("Server Started");
-});*/
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    app.listen(8080, () => {
-      console.log("Server Started on port 8080");
-    });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+// Connect to MongoDB
+mongoose.connect(MONGO_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.error("MongoDB connection error:", error));
+
+// ✅ Instead of app.listen, export the app
+export default app;
