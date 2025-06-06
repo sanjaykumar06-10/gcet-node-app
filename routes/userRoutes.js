@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 const userRouter = express.Router();
 
 // Register Route
+//hello
 userRouter.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
