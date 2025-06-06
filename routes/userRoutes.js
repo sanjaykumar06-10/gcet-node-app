@@ -18,7 +18,7 @@ userRouter.post("/register", async (req, res) => {
     const user = await userModel.create({
       name,
       email,
-      password: pass,  // directly saving password (not secure for production)
+      password: password,  // directly saving password (not secure for production)
     });
 
     return res.json({ message: "User registered successfully" });
